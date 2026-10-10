@@ -29,7 +29,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; }
 body {
   margin: 0;
   background: var(--ivory);
@@ -85,7 +85,7 @@ em, .ital { font-style: italic; }
   transition: background .4s ease, border-color .4s ease;
   border-bottom: 1px solid transparent;
 }
-.nav.scrolled { background: rgba(243, 238, 230, .92); backdrop-filter: blur(10px); border-color: var(--line); }
+.nav.scrolled { background: rgba(243, 238, 230, .97); border-color: var(--line); }
 .nav-inner {
   max-width: var(--max); margin: 0 auto; padding: 18px var(--gutter);
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -105,9 +105,11 @@ em, .ital { font-style: italic; }
     flex-direction: column; justify-content: center; align-items: flex-start; gap: 18px;
     padding: 0 var(--gutter);
     background: var(--ivory);
-    transform: translateY(-100%); transition: transform .5s cubic-bezier(.7,0,.2,1);
+    height: 100vh; height: 100dvh;
+    transform: translateY(-100%); visibility: hidden;
+    transition: transform .5s cubic-bezier(.7,0,.2,1), visibility 0s linear .5s;
   }
-  .nav-links.open { transform: none; }
+  .nav-links.open { transform: none; visibility: visible; transition: transform .5s cubic-bezier(.7,0,.2,1), visibility 0s; }
   .nav-links a { font-family: var(--serif); font-size: 44px; letter-spacing: -.01em; text-transform: none; font-weight: 400; }
 }
 
@@ -362,7 +364,8 @@ form { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 24px; }
 .field textarea { resize: vertical; min-height: 84px; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--coral); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip { position: relative; display: inline-block; }
+.chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
 .chip span { display: inline-block; padding: 9px 16px; border: 1px solid rgba(243,238,230,.35); border-radius: 999px; font-size: 13px; cursor: pointer; transition: all .25s ease; }
 .chip input:checked + span { background: var(--ivory); color: var(--oxblood); border-color: var(--ivory); }
 .chip input:focus-visible + span { outline: 2px solid var(--coral); outline-offset: 2px; }
@@ -761,12 +764,13 @@ footer { background: var(--oxblood); color: rgba(243,238,230,.6); border-top: 1p
   var navLinks = document.getElementById("navLinks");
   menuBtn.addEventListener("click", function () {
     var open = navLinks.classList.toggle("open");
+    document.body.style.overflow = open ? "hidden" : "";
     menuBtn.setAttribute("aria-expanded", open);
     menuBtn.textContent = open ? "Close" : "Menu";
   });
   links.forEach(function (a) {
     a.addEventListener("click", function () {
-      navLinks.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); menuBtn.textContent = "Menu";
+      navLinks.classList.remove("open"); document.body.style.overflow = ""; menuBtn.setAttribute("aria-expanded", "false"); menuBtn.textContent = "Menu";
     });
   });
 
