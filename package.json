@@ -4,7 +4,7 @@
   "private": true,
   "description": "Portfolio website for Effi Khosla, makeup artist in Adelaide",
   "scripts": {
-    "deploy": "gh-pages -d . -s \"{index.html,images/**}\""
+    "deploy": "gh-pages -d . -s \"{index.html,favicon.ico,site.webmanifest,images/**,icons/**}\""
   },
   "devDependencies": {
     "gh-pages": "6.1.1"
